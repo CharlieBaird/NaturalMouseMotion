@@ -4,15 +4,12 @@ import com.github.joonasvali.naturalmouse.api.OvershootManager;
 import com.github.joonasvali.naturalmouse.api.SpeedManager;
 import com.github.joonasvali.naturalmouse.support.Flow;
 import com.github.joonasvali.naturalmouse.util.Pair;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.util.ArrayDeque;
 import java.util.Iterator;
 
 public class MovementFactory {
-  private static final Logger log = LoggerFactory.getLogger(MovementFactory.class);
   private final int xDest;
   private final int yDest;
   private final SpeedManager speedManager;
@@ -42,7 +39,6 @@ public class MovementFactory {
     int overshoots = overshootManager.getOvershoots(flow, mouseMovementMs, initialDistance);
 
     if (overshoots == 0) {
-      log.debug("No overshoots for movement from ({}, {}) -> ({}, {})", currentMousePosition.x, currentMousePosition.y, xDest, yDest);
       movements.add(new Movement(xDest, yDest, initialDistance, xDistance, yDistance, mouseMovementMs, flow));
       return movements;
     }
@@ -75,7 +71,6 @@ public class MovementFactory {
       if (movement.destX == xDest && movement.destY == yDest) {
         lastMousePositionX = movement.destX - movement.xDistance;
         lastMousePositionY = movement.destY - movement.yDistance;
-        log.trace("Pruning 0-overshoot movement (Movement to target) from the end. " + movement);
         it.remove();
       } else {
         remove = false;
@@ -91,9 +86,6 @@ public class MovementFactory {
         xDest, yDest, distance, xDistance, yDistance, finalMovementTime, movementToTargetFlowTime.x
     );
     movements.add(finalMove);
-
-    log.debug("{} movements returned for move ({}, {}) -> ({}, {})", movements.size(), currentMousePosition.x, currentMousePosition.y, xDest, yDest);
-    log.trace("Movements are: {} ", movements);
 
     return movements;
   }
